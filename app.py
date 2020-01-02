@@ -12,9 +12,9 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/index")
 def index():
-  template = "<h1>Instance: {}</h1><p>CPU Utilization: {}% {}"
+  template = "<h1>Instance: {}</h1><p>CPU Utilization: {}% (real-time)" + FOOTER
   cpu_util = round(cpu_percent())
-  return template.format(HOSTNAME, cpu_util, FOOTER)
+  return template.format(HOSTNAME, cpu_util)
 
 @app.route("/load")
 def load():
