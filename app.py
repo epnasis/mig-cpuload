@@ -3,16 +3,18 @@ from subprocess import Popen, PIPE
 from socket import gethostname
 from psutil import cpu_percent, cpu_count
 
+REFRESH_SEC = 2
 HOSTNAME = gethostname()
 CPU_COUNT = cpu_count()
-FOOTER = '<br><p><a href="/">Refresh</a> | <a href="/load">Generate load</a> | <a href="/stop">Stop load</a>'
+HEADER = '<html><head><title>{}</title><meta http-equiv="refresh" content="{}"></head><body>'.format(HOSTNAME, REFRESH_SEC)
+FOOTER = '<br><p><a href="/">Refresh</a> | <a href="/load">Generate load</a> | <a href="/stop">Stop load</a></body></html>'
 
 app = Flask(__name__)
 
 @app.route("/")
 @app.route("/index")
 def index():
-  template = "<h1>Instance: {}</h1><p>CPU Utilization: {}% (real-time)" + FOOTER
+  template = HEADER + "<h1>Instance: {}</h1><p>CPU Utilization: {}% (real-time)" + FOOTER
   cpu_util = round(cpu_percent())
   return template.format(HOSTNAME, cpu_util)
 
