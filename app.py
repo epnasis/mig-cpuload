@@ -14,7 +14,7 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/index")
 def index():
-  template = HEADER + "<h1>Instance: {}</h1><p>CPU Utilization: {}% (real-time)" + FOOTER
+  template = HEADER + "<h1>Instance: {}</h1><p><b>CPU Utilization:</b> {}% (real-time)" + FOOTER
   cpu_util = round(cpu_percent())
   return template.format(HOSTNAME, cpu_util)
 
