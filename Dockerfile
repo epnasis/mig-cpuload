@@ -5,6 +5,7 @@ RUN apk add --no-cache --virtual build-packages python3-dev gcc libc-dev linux-h
     && apk del build-packages \
     && rm -rf /root/.cache
 EXPOSE 80
-COPY app.py /usr/src/app/
-CMD [ "python3", "/usr/src/app/app.py" ]
+WORKDIR /usr/src/app
+COPY app.py .
+CMD [ "python3", "app.py" ]
 
