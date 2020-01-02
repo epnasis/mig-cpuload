@@ -1,6 +1,6 @@
 FROM alpine:3.11.2
 RUN apk add --no-cache python3 python3-dev gcc libc-dev linux-headers && \
-    pip3 install Flask psutil && \
+    pip3 --disable-pip-version-check install Flask psutil && \
     apk del python3-dev gcc libc-dev linux-headers && \
     rm -rf /var/cache/apk/* /root/.cache
 EXPOSE 80
