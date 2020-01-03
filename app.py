@@ -22,7 +22,7 @@ def index():
 def load():
   print("Generating load for %s CPUs" % str(CPU_COUNT), flush=True)
   for i in range(CPU_COUNT):
-    print("Starting process %s" % str(i), flush=True)
+    print("Starting process %s" % str(i+1), flush=True)
     Popen("cat /dev/urandom > /dev/null", shell=True)
   return "Generating CPU load...<br><p><a href='/'>Go back</a>"
 
