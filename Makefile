@@ -37,12 +37,12 @@ clean: clean-migs clean-templates
 
 clean-migs:
 ifneq ($(MIG_NAMES),)
-	gcloud compute instance-groups managed delete -q $(MIG_NAMES) --zone=$(ZONE)
+	-gcloud compute instance-groups managed delete -q $(MIG_NAMES) --zone=$(ZONE)
 endif
 
 clean-templates: 
 ifneq ($(TEMPLATE_NAMES),)
-	gcloud compute instance-templates delete -q $(TEMPLATE_NAMES) 
+	-gcloud compute instance-templates delete -q $(TEMPLATE_NAMES)
 endif
 
 
