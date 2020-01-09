@@ -1,4 +1,4 @@
-# cpuload-mig
+# mig-cpuload
 
 Tool for testing Google Cloud autoscaling that generates VM instance CPU load on demand. 
 * Builds docker image and pushes it to current project Container Registry
