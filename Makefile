@@ -9,8 +9,12 @@ TARGET_CPU_UTILIZATION=0.8
 # ---------------------------
 include CONFIG
 
+ifeq (${GOOGLE_CLOUD_PROJECT},)
+	CHECK_ENV:=$(error "[!] Project not set. Run: export GOOGLE_CLOUD_PROJECT=<your_project_here>")
+endif
+
 CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(CONTAINER_NAME):latest
-MIG_NAME:=$(CONTAINER_NAME)-$(shell tr -dc 0-9 < /dev/urandom | head -c5)
+MIG_NAME:=$(CONTAINER_NAME)-$(shell LC_ALL=C tr -dc 0-9 < /dev/urandom | head -c5)
 
 MIG_LIST:=$(shell gcloud compute instance-groups managed list \
 	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
