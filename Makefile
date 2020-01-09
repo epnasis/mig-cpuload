@@ -7,8 +7,8 @@ CONTAINER_NAME=mig-cpuload
 include CONFIG
 CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(CONTAINER_NAME):latest
 MIG_NAME:=$(CONTAINER_NAME)-$(shell tr -dc 0-9 < /dev/urandom | head -c5)
-MIG_NAMES:=$(shell gcloud compute instance-groups managed list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}" --format="value(name)")
-TEMPLATE_NAMES:=$(shell gcloud compute instance-templates list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}" --format="value(name)")
+MIG_NAMES:=$(shell gcloud compute instance-groups managed list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+TEMPLATE_NAMES:=$(shell gcloud compute instance-templates list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
 
 mig:	.docker mig-template 
 	gcloud compute instance-groups managed create $(MIG_NAME) \
