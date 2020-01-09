@@ -30,9 +30,15 @@ $ export GOOGLE_CLOUD_PROJECT=<your_project_here>
 $ make
 ```
 
-(Optional) Repeat `make` command to create more MIGs. You can adjust CONFIG file if you want to change `MACHINE_TYPE`
+(Optional) Repeat `make` command to create more MIGs. You can adjust CONFIG file if you want to change `MACHINE_TYPE` or other MIG/autoscaler configuration.
 
 5. Connect to your MIG instance using your browser to generate/stop load and test autoscaler features.
+
+![Screenshot-with-instance-list](img/MIG-list.png)
+
+Click "Generate load" to create 100% utilization. Click "Stop load" to kill load at any time. Repeat for as many instances as you need in your testing scenario.
+
+![Screenshot-with-instance-external-IP-http](img/Instance-HTTP.png)
 
 6. Once done remove created resources with:
 
