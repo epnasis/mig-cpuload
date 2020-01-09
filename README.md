@@ -1,10 +1,11 @@
 # cpuload-mig
 
 Tool for testing Google Cloud autoscaling that generates VM instance CPU load on demand. 
-* Builds docker image and poshes it to you Container Registry
-* Creates Managed Instance Group (MIG) with autoscaling with instance template that launches docker container 
-* Listens on HTTP port for requests to generate/stop 100% CPU load on each instance
-* Watch your MIG autoscale based on the load you generate. Change load and see how MIG autoscaler reacts.
+* Builds docker image and pushes it to current project Container Registry
+* Creates Managed Instance Group (MIG) with autoscaling and instance template
+* Docker app listens on HTTP port for requests to generate/stop 100% CPU load on each instance
+
+Follow instructions below and watch your MIG autoscale based on the load you generate. Change load and see how MIG autoscaler reacts.
 
 ## Getting started
 
@@ -26,7 +27,7 @@ $ export GOOGLE_CLOUD_PROJECT=<your_project_here>
 4. Create new autoscaled MIG for testing:
 
 ```shell
-make
+$ make
 ```
 
 (Optional) Repeat `make` command to create more MIGs. You can adjust CONFIG file if you want to change `MACHINE_TYPE`
@@ -36,7 +37,7 @@ make
 6. Once done remove created resources with:
 
 ```shell
-make clean
+$ make clean
 ```
 
 ## Contact
