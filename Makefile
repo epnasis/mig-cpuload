@@ -2,6 +2,9 @@
 MACHINE_TYPE=f1-micro
 ZONE=us-east1-c
 CONTAINER_NAME=mig-cpuload
+MIN_NUM_REPLICAS=1
+MAX_NUM_REPLICAS=10
+TARGET_CPU_UTILIZATION=0.8
 
 # ---------------------------
 include CONFIG
@@ -16,10 +19,10 @@ mig:	.docker mig-template
 		--size=1 \
 		--zone=$(ZONE)
 	gcloud compute instance-groups managed set-autoscaling $(MIG_NAME) \
-		--min-num-replicas=1 \
-		--max-num-replicas=10 \
+		--min-num-replicas=$(MIN_NUM_REPLICAS) \
+		--max-num-replicas=$(MAX_NUM_REPLICAS) \
 		--scale-based-on-cpu \
-		--target-cpu-utilization=0.8 \
+		--target-cpu-utilization=$(TARGET_CPU_UTILIZATION) \
 		--zone=$(ZONE)
 
 mig-template: 
