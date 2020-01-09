@@ -8,10 +8,16 @@ TARGET_CPU_UTILIZATION=0.8
 
 # ---------------------------
 include CONFIG
+
 CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(CONTAINER_NAME):latest
 MIG_NAME:=$(CONTAINER_NAME)-$(shell tr -dc 0-9 < /dev/urandom | head -c5)
-MIG_NAMES:=$(shell gcloud compute instance-groups managed list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
-TEMPLATE_NAMES:=$(shell gcloud compute instance-templates list --filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+
+MIG_LIST:=$(shell gcloud compute instance-groups managed list \
+	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+TEMPLATE_LIST:=$(shell gcloud compute instance-templates list \
+	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+DOCKER_LIST:=$(shell gcloud container images list \
+	--filter="name:$(CONTAINER_NAME)" --format="value(name)")
 
 mig:	.docker mig-template 
 	gcloud compute instance-groups managed create $(MIG_NAME) \
@@ -31,22 +37,30 @@ mig-template:
 		--container-image=$(CONTAINER_TAG) \
 		--tags http-server
 
+docker: 
+	@-rm -f .docker
+	@$(MAKE) .docker
+
 .docker: Dockerfile app.py CONFIG
 	docker build -t $(CONTAINER_TAG) .
 	docker push $(CONTAINER_TAG)
 	@touch .docker 
 
-clean: clean-migs clean-templates
+clean: clean-migs clean-templates clean-docker
 
 clean-migs:
-ifneq ($(MIG_NAMES),)
-	-gcloud compute instance-groups managed delete -q $(MIG_NAMES) --zone=$(ZONE)
+ifneq ($(MIG_LIST),)
+	-gcloud compute instance-groups managed delete -q $(MIG_LIST) --zone=$(ZONE)
 endif
 
 clean-templates: 
-ifneq ($(TEMPLATE_NAMES),)
-	-gcloud compute instance-templates delete -q $(TEMPLATE_NAMES)
+ifneq ($(TEMPLATE_LIST),)
+	-gcloud compute instance-templates delete -q $(TEMPLATE_LIST)
 endif
 
-
+clean-docker:
+ifneq ($(DOCKER_LIST),)
+	-gcloud container images delete $(DOCKER_LIST) --quiet --force-delete-tags
+	-rm .docker
+endif
 
