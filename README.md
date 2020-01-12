@@ -14,20 +14,20 @@ Follow instructions below and watch your MIG autoscale based on the load you gen
 2. Clone this repo
 
 ```shell
-$ git clone https://github.com/epnasis/mig-cpuload.git
-$ cd mig-cpuload/
+git clone https://github.com/epnasis/mig-cpuload.git
+cd mig-cpuload/
 ```
 
 3. Skip this step if using [Cloud Shell](https://cloud.google.com/shell/docs/using-cloud-shell). Otherwise export your Google Cloud project to `GOOGLE_CLOUD_PROJECT`
 
 ```shell
-$ export GOOGLE_CLOUD_PROJECT=<your_project_here>
+export GOOGLE_CLOUD_PROJECT=<your_project_here>
 ```
 
 4. Create new autoscaled MIG for testing:
 
 ```shell
-$ make
+make
 ```
 
 (Optional) Repeat `make` command to create more MIGs. You can adjust CONFIG file if you want to change `MACHINE_TYPE` or other MIG/autoscaler configuration.
@@ -43,7 +43,7 @@ Click "Generate load" to create 100% utilization. Click "Stop load" to kill load
 6. Once done remove created resources with:
 
 ```shell
-$ make clean
+make clean
 ```
 
 ## Contact
