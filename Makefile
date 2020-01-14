@@ -16,6 +16,8 @@ endif
 CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(CONTAINER_NAME):latest
 MIG_NAME:=$(CONTAINER_NAME)-$(shell LC_ALL=C tr -dc 0-9 < /dev/urandom | head -c5)
 
+STATUS:=$(info [*] Initializing...)
+
 MIG_LIST:=$(shell gcloud compute instance-groups managed list \
 	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
 TEMPLATE_LIST:=$(shell gcloud compute instance-templates list \
