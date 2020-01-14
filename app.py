@@ -10,6 +10,7 @@ HEADER = '<html><head><title>{}</title><meta http-equiv="refresh" content="{}"><
 FOOTER = '<br><p><a href="/">Refresh</a> | <a href="/load">Generate load</a> | <a href="/stop">Stop load</a></body></html>'
 
 app = Flask(__name__)
+procs = []
 
 @app.route("/")
 @app.route("/index")
@@ -20,15 +21,19 @@ def index():
 
 @app.route("/load")
 def load():
-  print("Generating load for %s CPUs" % str(CPU_COUNT), flush=True)
+  print("Generating load for %s CPUs" % CPU_COUNT, flush=True)
   for i in range(CPU_COUNT):
-    print("Starting process %s" % str(i+1), flush=True)
-    Popen("cat /dev/urandom > /dev/null", shell=True)
+    proc = Popen("cat /dev/urandom > /dev/null", shell=True)
+    procs.append(proc)
+    print("Started process PID %s" % proc.pid, flush=True)
   return "Generating CPU load...<br><p><a href='/'>Go back</a>"
 
 @app.route("/stop")
 def stop():
-  Popen("killall cat", shell=True)
+  while procs:
+    proc = procs.pop()
+    proc.kill()
+    print("Killed process PID %s" % proc.pid, flush=True)
   return "Stopping CPU load...<br><p><a href='/'>Go back</a>"
 
 if __name__ == '__main__':
