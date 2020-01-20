@@ -22,13 +22,16 @@ MIG_LIST:=$(shell gcloud compute instance-groups managed list \
 	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
 TEMPLATE_LIST:=$(shell gcloud compute instance-templates list \
 	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+HEALTHCHECK_LIST:=$(shell gcloud compute health-checks list \
+	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
 DOCKER_LIST:=$(shell gcloud container images list \
 	--filter="name:$(CONTAINER_NAME)" --format="value(name)")
 
-mig:	.docker mig-template 
+mig:	.docker mig-template mig-healthcheck
 	gcloud compute instance-groups managed create $(MIG_NAME) \
 		--template=$(MIG_NAME) \
 		--size=1 \
+		--health-check=$(MIG_NAME) \
 		--zone=$(ZONE)
 	gcloud compute instance-groups managed set-autoscaling $(MIG_NAME) \
 		--min-num-replicas=$(MIN_NUM_REPLICAS) \
@@ -43,6 +46,13 @@ mig-template:
 		--container-image=$(CONTAINER_TAG) \
 		--tags http-server
 
+mig-healthcheck:
+	gcloud compute health-checks create http $(MIG_NAME) --port 80 \
+		--check-interval 10s \
+		--healthy-threshold 1 \
+		--unhealthy-threshold 3 \
+		--timeout 5s
+
 docker: 
 	@-rm -f .docker
 	@$(MAKE) .docker
@@ -52,7 +62,7 @@ docker:
 	docker push $(CONTAINER_TAG)
 	@touch .docker 
 
-clean: clean-migs clean-templates clean-docker
+clean: clean-migs clean-templates clean-healthchecks clean-docker
 
 clean-migs:
 ifneq ($(MIG_LIST),)
@@ -62,6 +72,11 @@ endif
 clean-templates: 
 ifneq ($(TEMPLATE_LIST),)
 	-gcloud compute instance-templates delete -q $(TEMPLATE_LIST)
+endif
+
+clean-healthchecks:
+ifneq ($(HEALTHCHECK_LIST),)
+	-gcloud compute health-checks delete -q $(HEALTHCHECK_LIST)
 endif
 
 clean-docker:

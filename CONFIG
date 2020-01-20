@@ -1,5 +1,6 @@
 
 MACHINE_TYPE=f1-micro
+#MACHINE_TYPE=n1-standard-16
 ZONE=us-east1-c
 CONTAINER_NAME=mig-cpuload
 MIN_NUM_REPLICAS=1
