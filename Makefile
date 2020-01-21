@@ -1,7 +1,7 @@
 # Default values
 MACHINE_TYPE=f1-micro
 ZONE=us-east1-c
-CONTAINER_NAME=mig-cpuload
+NAME=mig-cpuload
 MIN_NUM_REPLICAS=1
 MAX_NUM_REPLICAS=10
 TARGET_CPU_UTILIZATION=0.8
@@ -13,19 +13,19 @@ ifeq (${GOOGLE_CLOUD_PROJECT},)
 	CHECK_ENV:=$(error "[!] Project not set. Run: export GOOGLE_CLOUD_PROJECT=<your_project_here>")
 endif
 
-CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(CONTAINER_NAME):latest
-MIG_NAME:=$(CONTAINER_NAME)-$(shell LC_ALL=C tr -dc 0-9 < /dev/urandom | head -c5)
+CONTAINER_TAG:=gcr.io/$(GOOGLE_CLOUD_PROJECT)/$(NAME):latest
+MIG_NAME:=$(NAME)-$(shell LC_ALL=C tr -dc 0-9 < /dev/urandom | head -c5)
 
 STATUS:=$(info [*] Initializing...)
 
 MIG_LIST:=$(shell gcloud compute instance-groups managed list \
-	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
 TEMPLATE_LIST:=$(shell gcloud compute instance-templates list \
-	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
 HEALTHCHECK_LIST:=$(shell gcloud compute health-checks list \
-	--filter="name ~ ^$(CONTAINER_NAME)-[0-9]{5}$$" --format="value(name)")
+	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
 DOCKER_LIST:=$(shell gcloud container images list \
-	--filter="name:$(CONTAINER_NAME)" --format="value(name)")
+	--filter="name:$(NAME)" --format="value(name)")
 
 mig:	.docker mig-template mig-healthcheck
 	gcloud compute instance-groups managed create $(MIG_NAME) \
