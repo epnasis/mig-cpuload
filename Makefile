@@ -5,6 +5,7 @@ NAME=mig-cpuload
 MIN_NUM_REPLICAS=1
 MAX_NUM_REPLICAS=10
 TARGET_CPU_UTILIZATION=0.8
+INIT_DELAY_SEC=0
 
 # ---------------------------
 include CONFIG
@@ -44,6 +45,7 @@ mig-template:
 	gcloud compute instance-templates create-with-container $(MIG_NAME) \
 		--machine-type=$(MACHINE_TYPE) \
 		--container-image=$(CONTAINER_TAG) \
+		--container-env INIT_DELAY_SEC=$(INIT_DELAY_SEC) \
 		--tags http-server
 
 mig-healthcheck:

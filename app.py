@@ -2,6 +2,8 @@ from flask import Flask
 from subprocess import Popen, PIPE
 from socket import gethostname
 from psutil import cpu_percent, cpu_count
+from os import getenv
+from time import sleep
 
 REFRESH_SEC = 2
 HOSTNAME = gethostname()
@@ -37,5 +39,16 @@ def stop():
   return "Stopping CPU load...<br><p><a href='/'>Go back</a>"
 
 if __name__ == '__main__':
-    print("Starting...")
-    app.run(host='0.0.0.0', port=80)
+  print("Starting...")
+
+  try:
+    init_delay = int(getenv('INIT_DELAY_SEC', 0))
+  except ValueError:
+    init_delay = 0
+
+  if init_delay:
+    print("Simulating initialization delay of %s seconds..." % init_delay)
+    sleep(init_delay)
+    print("End of initialization.")
+
+  app.run(host='0.0.0.0', port=80)
