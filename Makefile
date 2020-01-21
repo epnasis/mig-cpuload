@@ -50,6 +50,7 @@ mig-template:
 
 mig-healthcheck:
 	gcloud compute health-checks create http $(MIG_NAME) --port 80 \
+		--request-path="/health"
 		--check-interval 10s \
 		--healthy-threshold 1 \
 		--unhealthy-threshold 3 \
