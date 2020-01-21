@@ -2,8 +2,14 @@
 
 Tool for testing Google Cloud autoscaling that generates VM instance CPU load on demand. 
 * Builds docker image and pushes it to current project Container Registry
-* Creates Managed Instance Group (MIG) with autoscaling and instance template
-* Docker app listens on HTTP port for requests to generate/stop 100% CPU load on each instance
+* Creates Managed Instance Group (MIG) with instance template, autoscaling and health-checks for autohealing
+* Each instance listens on external IP HTTP port for allowing you to:
+  * Generate/stop 100% CPU load on each instance
+  * Make unhealthy - disabling health-checks to test autohealing
+* You can adjust settings (`CONFIG` file) for your testing:
+  * Machine type used in MIG (smaller bigger CPU/Memory)
+  * Initialization time to simulate apps that require long time to start serving
+  * Autoscaler configuration
 
 Follow instructions below and watch your MIG autoscale based on the load you generate. Change load and see how MIG autoscaler reacts.
 
@@ -36,7 +42,7 @@ make
 
 ![Screenshot-with-instance-list](img/MIG-list.png)
 
-Click "Generate load" to create 100% utilization. Click "Stop load" to kill load at any time. Repeat for as many instances as you need in your testing scenario.
+Click "Generate load" to create 100% utilization. Click "Stop load" to kill load at any time. Repeat for as many instances as you need in your testing scenario. You can also make instance unhealthy (disable health-checks) to trigger autohealing.
 
 ![Screenshot-with-instance-external-IP-http](img/Instance-HTTP.png)
 
