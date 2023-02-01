@@ -19,13 +19,13 @@ MIG_NAME:=$(NAME)-$(shell LC_ALL=C tr -dc 0-9 < /dev/urandom | head -c5)
 
 STATUS:=$(info [*] Initializing...)
 
-MIG_LIST:=$(shell gcloud compute instance-groups managed list \
+MIG_LIST:=$(shell gcloud compute instance-groups managed list --verbosity=error \
 	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
-TEMPLATE_LIST:=$(shell gcloud compute instance-templates list \
+TEMPLATE_LIST:=$(shell gcloud compute instance-templates list --verbosity=error \
 	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
-HEALTHCHECK_LIST:=$(shell gcloud compute health-checks list \
+HEALTHCHECK_LIST:=$(shell gcloud compute health-checks list --verbosity=error \
 	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
-DOCKER_LIST:=$(shell gcloud container images list \
+DOCKER_LIST:=$(shell gcloud container images list --verbosity=error \
 	--filter="name:$(NAME)" --format="value(name)")
 
 mig:	.docker mig-template mig-healthcheck
