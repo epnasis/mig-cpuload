@@ -1,6 +1,6 @@
 # Default values
-MACHINE_TYPE=f1-micro
-ZONE=us-east1-c
+MACHINE_TYPE=e2-micro
+ZONE=us-central1-a
 NAME=mig-cpuload
 MIN_NUM_REPLICAS=1
 MAX_NUM_REPLICAS=10
