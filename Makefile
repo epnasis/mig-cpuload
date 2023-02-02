@@ -25,7 +25,7 @@ TEMPLATE_LIST:=$(shell gcloud compute instance-templates list --verbosity=error 
 	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
 HEALTHCHECK_LIST:=$(shell gcloud compute health-checks list --verbosity=error \
 	--filter="name ~ ^$(NAME)-[0-9]{5}$$" --format="value(name)")
-DOCKER_LIST:=$(shell gcloud container images list --verbosity=error \
+DOCKER_LIST:=$(shell gcloud container images list --verbosity=none \
 	--filter="name:$(NAME)" --format="value(name)")
 
 mig:	.docker mig-template mig-healthcheck
@@ -61,6 +61,7 @@ docker:
 	@$(MAKE) .docker
 
 .docker: Dockerfile app.py CONFIG
+	gcloud services enable containerregistry.googleapis.com
 	docker build -t $(CONTAINER_TAG) .
 	docker push $(CONTAINER_TAG)
 	@touch .docker 
