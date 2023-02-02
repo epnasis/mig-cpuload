@@ -52,7 +52,40 @@ Click "Generate load" to create 100% utilization. Click "Stop load" to kill load
 make clean
 ```
 
+## Configuration
+
+Update `CONFIG` file to set instance group properties:
+
+```
+NAME=mig-cpuload
+MACHINE_TYPE=e2-micro
+ZONE=us-central1-a
+MIN_NUM_REPLICAS=1
+MAX_NUM_REPLICAS=10
+TARGET_CPU_UTILIZATION=0.8
+INIT_DELAY_SEC=0
+```
+
+## Other commands
+
+* Recreate docker image - useful if you updated the app.py of CONFIG files
+
+```shell
+make docker
+```
+
+* Create new instance template
+
+```shell
+make mig-template
+```
+
+* Create new health-check
+
+```shell
+make mig-healthcheck
+```
+
 ## Contact
 
 In case of questions contact [pwenda@google.com](mailto:pwenda@google.com)
-
